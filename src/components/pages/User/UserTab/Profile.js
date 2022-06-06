@@ -13,11 +13,8 @@ const Section = styled.div`
 `;
 
 const Profile = () => {
-    const [level, setLevel] = useState(true);
-
     return (
         <Section>
-            {level ? <ParticlesBg type='polygon' bg={true} /> : ''}
             <ProfileTab>
                 <div label='Thông tin'>
                     <ProfileCard level={2} />
