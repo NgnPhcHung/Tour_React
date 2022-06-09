@@ -19,9 +19,13 @@ const Section = styled.div`
         background-color: ${(props) => props.theme.text};
     }
     @media (max-width: 48em) {
-        min-height: 100vh;
+        /* min-height: 100vh;
         padding-bottom: 0;
-        padding-right: -100em;
+        padding-right: -100em; */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    align-items: center;
     }
 `;
 
@@ -121,7 +125,9 @@ const Right = styled.div`
         padding-top: 20em;
     }
     @media (max-width: 48em) {
-        left: 0;
+        /* left: 0; */
+        margin-left: 25rem;
+
     }
 `;
 

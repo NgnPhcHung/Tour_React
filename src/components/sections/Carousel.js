@@ -71,7 +71,7 @@ const ImageContainer = styled.div`
     align-items: center;
     padding: 1rem;
     cursor: pointer;
-
+    position: relative;
     img {
         width: 40em;
         transition: all 0.3s ease;
@@ -95,7 +95,8 @@ const ImageContainer = styled.div`
 
     @media (max-width: 48em) {
         img {
-            width: 70vw;
+            /* width: 70vw; */
+            width: calc(100vw - 7em);
             height: 20em;
         }
     }

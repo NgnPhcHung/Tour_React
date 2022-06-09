@@ -48,6 +48,11 @@ const GuestPicker = styled.input.attrs({
         outline: none;
     }
 `;
+
+const ButtonContainer = styled.a`
+    width: 100%;
+`;
+
 const ButtonSearch = styled.button`
     background-color: #ff7779;
     width: 100%;
@@ -92,6 +97,36 @@ const Search = () => {
         setEndDate(ranges.selection.endDate);
     }
 
+    const printDetail = () => {
+        const newS = start.toString().split(' ');
+        const newE = end.toString().split(' ');
+
+        console.log(
+            'from :',
+            newS[0] +
+                '-' +
+                newS[1] +
+                '-' +
+                newS[2] +
+                '-' +
+                newS[3] +
+                ' timezone ' +
+                newS[5]
+        );
+        console.log(
+            'to :',
+            newS[0] +
+                '-' +
+                newE[1] +
+                '-' +
+                newE[2] +
+                '-' +
+                newE[3] +
+                ' timezone ' +
+                newE[5]
+        );
+    };
+
     return (
         <SearchContainer>
             {matches ? (
@@ -112,39 +147,9 @@ const Search = () => {
                 Number of Guest <PeopleIcon />
                 <GuestPicker />
             </PeopleTitle>
-            <ButtonSearch
-                onClick={() => {
-                    const newS = start.toString().split(' ');
-                    const newE = end.toString().split(' ');
-
-                    console.log(
-                        'from :',
-                        newS[0] +
-                            '-' +
-                            newS[1] +
-                            '-' +
-                            newS[2] +
-                            '-' +
-                            newS[3] +
-                            ' timezone ' +
-                            newS[5]
-                    );
-                    console.log(
-                        'to :',
-                        newS[0] +
-                            '-' +
-                            newE[1] +
-                            '-' +
-                            newE[2] +
-                            '-' +
-                            newE[3] +
-                            ' timezone ' +
-                            newE[5]
-                    );
-                }}
-            >
-                Tìm
-            </ButtonSearch>
+            <ButtonContainer href='/findResult'>
+                <ButtonSearch>Tìm</ButtonSearch>
+            </ButtonContainer>
         </SearchContainer>
     );
 };

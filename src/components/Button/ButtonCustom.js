@@ -8,8 +8,12 @@ import './styleButton.css';
 
 const Custom = styled(AwesomeButton)``;
 
-const ButtonCustom = ({ text, children }) => {
-    return <Custom>{children}</Custom>;
+const ButtonCustom = ({ text, children, click }) => {
+    return (
+        <Custom>
+            <i onClick={click}>{children}</i>
+        </Custom>
+    );
 };
 
 export default ButtonCustom;

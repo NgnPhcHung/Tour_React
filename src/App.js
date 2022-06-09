@@ -8,7 +8,6 @@ import DatePicker from './components/sections/DatePicker';
 import HightLight from './components/pages/Home/HightLight';
 
 import Faq from './components/pages/Home/Faq';
-import Footer from './components/pages/Home/Footer';
 import ScrollToTop from './components/sections/ScrollToTop';
 import CardSlider from './components/pages/Home/CardSlider';
 
@@ -23,7 +22,6 @@ function App() {
                 <CardSlider />
                 <RoadMap />
                 <Faq />
-                <Footer />
                 <ScrollToTop />
             </ThemeProvider>
         </>

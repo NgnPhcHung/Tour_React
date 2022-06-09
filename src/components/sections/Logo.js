@@ -15,10 +15,21 @@ const LogoText = styled.h1`
     }
 `;
 
+const scrollTo = () => {
+    let element = document.getElementById('home');
+    element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+    });
+};
+
 const Logo = () => {
     return (
         <LogoText>
-            <Link to='/'>H.</Link>
+            <Link to='/' onClick={scrollTo}>
+                H.
+            </Link>
         </LogoText>
     );
 };

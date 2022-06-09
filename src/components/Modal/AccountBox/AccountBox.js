@@ -17,14 +17,14 @@ const BoxContainer = styled.div`
     position: relative;
     z-index: 100;
 
-    @media (max-width: 64em) {
+    @media (max-width: 72em) {
         width: 20em;
     }
 `;
 
 const TopContainer = styled.div`
     width: 100%;
-    min-height: 35vh;
+    min-height: 25vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -34,14 +34,14 @@ const TopContainer = styled.div`
 `;
 
 const BackDrop = styled(motion.div)`
-    width: 160%;
-    height: 73vh;
+    width: 120%;
+    height: 60vh;
     position: absolute;
     display: flex;
     flex-direction: column;
     border-radius: 50%;
     transform: rotate(60deg);
-    top: -30vh;
+    top: -40vh;
     left: -5vw;
     background: rgb(89, 101, 252);
     background: linear-gradient(

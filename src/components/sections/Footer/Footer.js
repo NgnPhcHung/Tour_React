@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Banner from '../../sections/Banner';
-import Logo from '../../sections/Logo';
+import Banner from './Banner';
+import Logo from '../Logo';
+import Bottom from './Bottom';
 
 const Section = styled.section`
     min-height: 100vh;
@@ -36,8 +37,8 @@ const MenuItem = styled.ul`
     list-style: none;
     width: 50%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
     grid-gap: 1rem;
     margin-bottom: 1em;
 `;
@@ -60,13 +61,6 @@ const Item = styled.li`
     }
 `;
 
-const Bottom = styled.div`
-    width: 75%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
 const Footer = () => {
     const scrollTo = (id) => {
         let element = document.getElementById(id);
@@ -80,9 +74,6 @@ const Footer = () => {
         <Section>
             <Banner />
             <Container>
-                <Left>
-                    <Logo />
-                </Left>
                 <MenuItem>
                     <Item onClick={() => scrollTo('home')}>Home</Item>
                     <Item onClick={() => scrollTo('hightlight')}>
@@ -94,12 +85,7 @@ const Footer = () => {
                     <Item onClick={() => scrollTo('faq')}>Faq</Item>
                 </MenuItem>
             </Container>
-            <Bottom>
-                <span>
-                    &copy;{new Date().getFullYear()} Hân hạnh chào đón bạn
-                </span>
-                <span>Make with &#10084; by Hungdeptrai </span>
-            </Bottom>
+            <Bottom />
         </Section>
     );
 };

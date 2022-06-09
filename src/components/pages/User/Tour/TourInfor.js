@@ -1,5 +1,6 @@
 import React from 'react';
-import Loading from '../../sections/Loading';
+import FetchHeader from '../../../../API/FetchHeader';
+import Loading from '../../../sections/Loading';
 
 const TourInfor = () => {
     return (

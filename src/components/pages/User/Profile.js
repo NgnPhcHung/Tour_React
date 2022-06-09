@@ -1,15 +1,16 @@
 import ParticlesBg from 'particles-bg';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ProfileTab from '../ProfileTab';
-import TourInfor from '../TourInfor';
-import ProfileCard from './ProfileCard';
+import ProfileTab from './UserTab/ProfileTab';
+import TourInfor from './Tour/TourInfor';
+import ProfileCard from './UserTab/ProfileCard';
 
 const Section = styled.div`
+    height: 95vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    padding-bottom: 5rem;
 `;
 
 const Profile = () => {

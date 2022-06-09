@@ -236,7 +236,10 @@ const Navigation = ({ isHide }) => {
                         ) : (
                             <Button
                                 text='Trở thành thành viên'
-                                onClick={() => setShowLogin(!showLogin)}
+                                onClick={() => {
+                                    setShowLogin(!showLogin);
+                                    setClick(!click);
+                                }}
                             />
                         )}
                         {showLogin && <Login show={showLogin} close={Toggle} />}
@@ -248,7 +251,10 @@ const Navigation = ({ isHide }) => {
                     ) : (
                         <Button
                             text='Trở thành thành viên'
-                            onClick={() => setShowLogin(!showLogin)}
+                            onClick={() => {
+                                setClick(!click);
+                                setShowLogin(!showLogin);
+                            }}
                         />
                     )}
                     {showLogin && <Login show={showLogin} close={Toggle} />}

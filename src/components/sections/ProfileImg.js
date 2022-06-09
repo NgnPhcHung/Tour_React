@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Routes, Route, Link } from 'react-router-dom';
-import User from '../pages/User/UserTab/User';
-import TestFetch from '../../API/TestFetch';
+import { Link } from 'react-router-dom';
 
 const ImageContainer = styled.div`
     border-radius: 50%;

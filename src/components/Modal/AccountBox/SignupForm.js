@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ButtonCustom from '../../Button/ButtonCustom';
 import { Marginer } from '../../../Common/Marginer';
-
+import Axios from 'axios'
 import { AccountContext } from './AccountContext';
 import {
     BoldLinkk,
@@ -13,12 +13,37 @@ import {
 } from '../../../Common/Common';
 
 const SignupForm = (props) => {
-    const classes = useStyles();
     const { switchToSignIn } = useContext(AccountContext);
+    const [usename, setUsername] = useState('');
+    const [passWord, setPassword] = useState('');
+    const [phone, setPhone] = useState('')
+    const [name, setName] = useState('')
+
+    const register = () => {
+        Axios.post('http://localhost:3001/user/singup', {
+            name: name,
+            username: usename,
+            password: passWord,
+            phone: phone,
+        }).then(() => {
+            alert('sucess');
+        });
+    };
 
     return (
         <BoxContainer>
             <FormContainer>
+                <CustomizedTextField
+                    label='Full Name'
+                    type='text'
+                    required
+                    fullWidth
+                    variant='outlined'
+                    id='custom-css-outlined-input'
+                    name='name'
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
                     label='Email'
                     type='email'
@@ -27,8 +52,9 @@ const SignupForm = (props) => {
                     variant='outlined'
                     id='custom-css-outlined-input'
                     name='email'
-                    className={classes.textField}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
+                <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
                     label='Password'
                     type='password'
@@ -37,8 +63,9 @@ const SignupForm = (props) => {
                     variant='outlined'
                     id='custom-css-outlined-input'
                     name='password'
-                    className={classes.textField}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
+                <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
                     label='Re-Password'
                     type='password'
@@ -47,8 +74,8 @@ const SignupForm = (props) => {
                     variant='outlined'
                     id='custom-css-outlined-input'
                     name='password'
-                    className={classes.textField}
                 />
+                <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
                     label='Phone'
                     type='number'
@@ -57,7 +84,7 @@ const SignupForm = (props) => {
                     variant='outlined'
                     id='custom-css-outlined-input'
                     name='phone'
-                    className={classes.textField}
+                    onChange={(e) => setPhone(e.target.value)}
                 />
             </FormContainer>
             <Marginer direction='vertical' margin={10} />
@@ -66,7 +93,7 @@ const SignupForm = (props) => {
                 <BoldLinkk onClick={switchToSignIn}>Đăng nhập</BoldLinkk>
             </MutedLink>
             <Marginer direction='vertical' margin='1rem' />
-            <ButtonCustom>Đăng kí</ButtonCustom>
+            <ButtonCustom click={register}><i onClick={switchToSignIn}>Đăng kí</i></ButtonCustom>
         </BoxContainer>
     );
 };
