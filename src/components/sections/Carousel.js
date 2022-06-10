@@ -33,7 +33,7 @@ const Container = styled.div`
     }
 `;
 
-const Item = styled.div`
+const Item = styled.a`
     /* width: calc(45rem - 2vw); */
     width: 60em;
     padding: 1rem 0;
@@ -150,7 +150,7 @@ const theData = [
 
 const CarouselComponent = ({ img, name = ' ', vote = ' ' }) => {
     return (
-        <Item>
+        <Item href='/tour/tourInfo'>
             <ImageContainer>
                 <img src={img} alt={name} />
             </ImageContainer>

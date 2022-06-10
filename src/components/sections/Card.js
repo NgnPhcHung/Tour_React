@@ -44,7 +44,7 @@ const Header = styled.div`
     border-top-right-radius: 10px;
 `;
 
-const CardContainer = styled.div`
+const CardContainer = styled.a`
     background: ${(props) => props.theme.body};
     width: 100%;
     display: inline-block;
@@ -107,7 +107,7 @@ const InforSection = styled.div`
 const Card = () => {
     return (
         <Section>
-            <CardContainer>
+            <CardContainer href='/tour/tourInfo'>
                 <Header>
                     <img
                         alt='cover'

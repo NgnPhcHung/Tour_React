@@ -25,18 +25,26 @@ const LoginForm = () => {
     // }, [])
 
     const login = async () => {
-        console.log(JSON.stringify({ UserID: username, Password: password }));
         try {
+            const json = JSON.stringify({
+                UserID: username,
+                Password: password,
+            });
+            console.log(json);
             const response = await axios.post(
                 'http://localhost:3100/user/login',
-                JSON.stringify({ UserD: username, Password: password }),
+                json,
                 {
-                    Headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: false,
                 }
             );
-            console.log(JSON.stringify(response?.data));
-            setAuthorizeToken(response?.data.result);
+            console.log(JSON.stringify(response?.data.results));
+            setAuthorizeToken(response?.data.results);
         } catch (err) {
             if (err.response?.status == 400) {
                 console.log('username or password are not correct');

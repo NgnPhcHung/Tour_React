@@ -69,24 +69,26 @@ const Content = styled.div`
     }
 `;
 
-const FindCard = ({}) => {
+const FindCard = () => {
     return (
-        <ListItem>
-            <ImageBox>
-                <img
-                    src='https://i.pravatar.cc/100?img=3'
-                    alt='search result'
-                />
-            </ImageBox>
-            <Content>
-                <h5>Result 1</h5>
-                <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. ... Ipsum available, but the majority
-                    have suffered alteration in some form
-                </p>
-            </Content>
-        </ListItem>
+        <a href='/tour/tourInfo'>
+            <ListItem>
+                <ImageBox>
+                    <img
+                        src='https://i.pravatar.cc/100?img=3'
+                        alt='search result'
+                    />
+                </ImageBox>
+                <Content>
+                    <h5>Result 1</h5>
+                    <p>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. ... Ipsum available, but the
+                        majority have suffered alteration in some form
+                    </p>
+                </Content>
+            </ListItem>
+        </a>
     );
 };
 

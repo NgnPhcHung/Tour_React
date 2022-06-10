@@ -137,7 +137,7 @@ const HamburgerBtn = styled.span`
 
 const Navigation = ({ isHide }) => {
     const [showLogin, setShowLogin] = useState(false);
-    const [logged, setLogged] = useState(true);
+    const [logged, setLogged] = useState(false);
     const ref = useRef(null);
     const [click, setClick] = useState(false);
     const scrollRef = useRef(null);
