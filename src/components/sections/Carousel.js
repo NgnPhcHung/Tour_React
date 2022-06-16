@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -6,8 +6,8 @@ import 'swiper/css/effect-cards';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation, Autoplay, Mousewheel } from 'swiper';
-
-import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Container = styled.div`
     width: 50em;
@@ -32,8 +32,7 @@ const Container = styled.div`
         right: 13rem;
     }
 `;
-
-const Item = styled.a`
+const Item = styled.div`
     /* width: calc(45rem - 2vw); */
     width: 60em;
     padding: 1rem 0;
@@ -43,13 +42,16 @@ const Item = styled.a`
     z-index: 5;
     backdrop-filter: blur(4px);
 
-    border: 2px solid ${(props) => props.theme.text};
-    border-radius: 15px;
+    img {
+        border-radius: 5px;
+    }
+    /* border: 2px solid ${(props) => props.theme.text};
+    border-radius: 15px; */
 
     @media (max-width: 64em) {
         width: calc(100vw - 5em);
         color: ${(props) => props.theme.body};
-        border: 2px solid ${(props) => props.theme.body};
+        /* border: 2px solid ${(props) => props.theme.body}; */
         left: 0;
         right: 5em;
     }
@@ -64,7 +66,6 @@ const Item = styled.a`
         }
     }
 `;
-
 const ImageContainer = styled.div`
     width: 40em;
     margin: 0 auto;
@@ -101,7 +102,6 @@ const ImageContainer = styled.div`
         }
     }
 `;
-
 const Name = styled.h2`
     font-size: ${(props) => props.theme.fontlg};
     display: flex;
@@ -134,35 +134,42 @@ const Vote = styled.h2`
     }
 `;
 
-const theData = [
-    {
-        name: 'cu hang osnn',
-        vote: 4.1,
-        imgsrc: 'https://i.pinimg.com/600x315/67/60/11/6760119abd653651ee2a360fd2a02090.jpg',
-    },
-
-    {
-        name: 'Hoả diệm sơn',
-        vote: 3.9,
-        imgsrc: 'https://i.ytimg.com/vi/RF_vArzyHHQ/maxresdefault.jpg',
-    },
-];
-
-const CarouselComponent = ({ img, name = ' ', vote = ' ' }) => {
+const CarouselComponent = ({ img, name = ' ', vote = ' ', id = '' }) => {
     return (
-        <Item href='/tour/tourInfo'>
-            <ImageContainer>
-                <img src={img} alt={name} />
-            </ImageContainer>
-            <Name> {name} </Name>
-            <Vote>
-                {vote} <StarRoundedIcon />{' '}
-            </Vote>
-        </Item>
+        <Link
+            to={{
+                pathname: `/tour/tourInfo/${id}`,
+            }}
+        >
+            <Item>
+                <ImageContainer>
+                    <img src={img} alt={name} />
+                </ImageContainer>
+                <Name> {name} </Name>
+                <Vote>{vote} VNĐ </Vote>
+            </Item>
+        </Link>
     );
 };
 
 const Carousel = () => {
+    const [datas, setDatas] = useState([]);
+
+    const getTourData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3100/tour/list');
+            setDatas(response?.data.results);
+            console.log(response?.data.results);
+        } catch (err) {
+            if (err.response?.status == 400) {
+                console.log('list not exist');
+            }
+        }
+    };
+
+    useEffect(() => {
+        getTourData();
+    }, []);
     return (
         <Container>
             <Swiper
@@ -181,13 +188,14 @@ const Carousel = () => {
                 modules={[Mousewheel, Pagination, Autoplay, Navigation]}
                 className='mySwiper'
             >
-                {theData.map((item, index) => {
+                {datas.map((item, index) => {
                     return (
                         <SwiperSlide>
                             <CarouselComponent
-                                img={item.imgsrc}
-                                name={item.name}
-                                vote={item.vote}
+                                img={item.Image}
+                                name={item.TourName}
+                                vote={item.Price}
+                                id={item.TourID}
                             />
                         </SwiperSlide>
                     );

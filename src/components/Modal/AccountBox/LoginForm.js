@@ -15,14 +15,6 @@ const LoginForm = () => {
     const { switchToSignUp } = useContext(AccountContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [authorizeToken, setAuthorizeToken] = useState();
-
-    // useEffect(() => {
-    //     Axios.get('http://localhost:3001/user/get')
-    //         .then((response) => {
-    //             setAccountList(response.data)
-    //         })
-    // }, [])
 
     const login = async () => {
         try {
@@ -30,21 +22,14 @@ const LoginForm = () => {
                 UserID: username,
                 Password: password,
             });
-            console.log(json);
             const response = await axios.post(
                 'http://localhost:3100/user/login',
-                json,
-                {
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Credentials': 'true',
-                        'Content-Type': 'application/json',
-                    },
-                    withCredentials: false,
-                }
+                json
             );
-            console.log(JSON.stringify(response?.data.results));
-            setAuthorizeToken(response?.data.results);
+            localStorage.setItem('token', JSON.stringify(username));
+            if (response?.data.results) {
+                window.location.reload();
+            }
         } catch (err) {
             if (err.response?.status == 400) {
                 console.log('username or password are not correct');

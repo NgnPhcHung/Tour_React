@@ -95,6 +95,7 @@ export const Button = styled.button`
 `;
 export const SubmitButton = styled(Button)`
     margin-right: 1rem;
+    color: ${(props) => props.theme.body};
 `;
 export const CancelButton = styled(Button)``;
 export const ButtonClose = styled.button`

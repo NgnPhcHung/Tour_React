@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ServiceCard from './ServiceCard';
 
@@ -6,24 +7,6 @@ const MenuItem = styled.ul`
     background-color: ${(props) => props.theme.body};
 
     margin-top: 2rem;
-`;
-
-const Item = styled.li`
-    width: fit-content;
-    cursor: pointer;
-
-    &::after {
-        content: ' ';
-        display: block;
-        width: 0%;
-        height: 2px;
-
-        transition: width 0.3s ease;
-    }
-
-    &:hover::after {
-        width: 100%;
-    }
 `;
 
 const Title = styled.h4`
@@ -46,17 +29,39 @@ const ServicesContent = styled.div`
 `;
 
 const Services = () => {
+    const [datas, setDatas] = useState([]);
+
+    const getServicesData = async () => {
+        try {
+            const response = await axios.get(
+                'http://localhost:3100/order/list'
+            );
+            console.log(response?.data);
+            setDatas(response?.data.results);
+        } catch (err) {
+            if (err.response?.status == 400) {
+                console.log('tour are not correct');
+            }
+        }
+    };
+
+    useEffect(() => {
+        getServicesData();
+    }, []);
     return (
         <MenuItem>
             <Title>Dịch vụ đi kèm</Title>
             <ServicesContent>
-                <ServiceCard id='c1' price='50.000' slot='10' />
-                <ServiceCard id='c2' price='50.000' slot='10' />
-                <ServiceCard id='c3' price='0' slot='10' />
-                <ServiceCard id='c4' price='50.000' slot='10' />
-                <ServiceCard id='c5' price='0' slot='10' />
-                <ServiceCard id='c6' price='50.000' slot='10' />
-                <ServiceCard id='c7' price='50.000' slot='10' />
+                {datas.map((item, index) => {
+                    return (
+                        <ServiceCard
+                            id={item.SID}
+                            name={item.ServiceName}
+                            price={item.Price}
+                            slot={item.Slot - item.OrderedSlot}
+                        />
+                    );
+                })}
             </ServicesContent>
         </MenuItem>
     );

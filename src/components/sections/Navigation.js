@@ -199,6 +199,13 @@ const Navigation = ({ isHide }) => {
         setShowLogin(!showLogin);
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setLogged(!logged);
+        }
+    }, []);
+
     showLogin ? lockScroll() : unlockScroll();
 
     const scrollTo = (id) => {

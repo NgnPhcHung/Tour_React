@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Checkout from './Checkout';
 import Services from './Services/Services';
 import TourBanner from './TourBanner';
+import axios from 'axios';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import moment from 'moment';
 
 const Section = styled.div`
     display: flex;
@@ -14,54 +19,96 @@ const ContentContainer = styled.div`
     border-radius: 10px;
 
     width: 90vw;
-    height: 95vh;
+    height: fit-content;
+    padding-bottom: 1rem;
     box-shadow: 2px 12px 20px -3px ${(props) => `rgba(${props.theme.textRgba}, 0.6)`};
 `;
-
 const Desription = styled.div`
     color: ${(props) => props.theme.text};
     top: 1rem;
     padding: 0 5rem;
-    p {
-    }
+    margin-top: 1.2rem;
+    margin-left: 1rem;
     h3 {
         padding-bottom: 0.5rem;
         text-decoration: underline;
         font-weight: 700;
         font-size: ${(props) => props.theme.fontxl};
     }
+
+    @media (max-width: 64em) {
+        display: inline-block;
+        padding: 0 0.5rem;
+        p {
+            font-size: ${(props) => props.theme.fontsm};
+        }
+    }
+    @media (max-width: 48em) {
+        h3 {
+            font-size: ${(props) => props.theme.fontlg};
+        }
+    }
+`;
+const DesriptionMenu = styled.ul`
+    list-style: none;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 2rem;
+    margin-bottom: 0.2em;
 `;
 
+const DesriptionItem = styled.li`
+    width: fit-content;
+`;
 const TourInfo = () => {
+    const { tourID } = useParams();
+
+    const [tourName, setTourName] = useState('');
+    const [tourDes, setTourDes] = useState('');
+    const [price, setPrice] = useState('');
+    const [image, setImage] = useState('');
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
+    const [slot, setSlot] = useState('');
+
+    const getTourDetail = async () => {
+        const response = await axios.get(
+            `http://localhost:3100/tour/details/${tourID}`
+        );
+        const res = response?.data.results[0];
+        setTourName(res.TourName);
+        setTourDes(res.Descriptions);
+        setPrice(res.Price);
+        setImage(res.Image);
+        var start = moment(res.BeginDate).utc().format('DD-MM-YYYY');
+        var end = moment(res.EndDate).utc().format('DD-MM-YYYY');
+        setFrom(start);
+        setTo(end);
+        setSlot(res.Slot - res.OrderedSlot);
+    };
+
+    useEffect(() => {
+        getTourDetail();
+    }, []);
+
     return (
         <Section>
             <ContentContainer>
-                <TourBanner
-                    name='Phú Quốc'
-                    loc='12N* ád2 1231'
-                    imgSrc='https://picsum.photos/500/400?random=1'
-                />
+                <TourBanner name={tourName} des={tourDes} imgSrc={image} />
                 <Desription>
-                    <h3>Giới thiệu sơ lược: </h3>
-                    <p>
-                        Chỗ nghỉ này cách bãi biển 3 phút đi bộ. Nằm cách Bãi
-                        Sau 550 m, Căn hộ Melody Vũng Tàu có sảnh khách chung
-                        cũng như chỗ nghỉ gắn máy điều hòa với sân hiên và WiFi
-                        miễn phí. Căn hộ tại đây có ban công, tầm nhìn ra hồ
-                        nước, khu vực ghế ngồi, TV truyền hình vệ tinh màn hình
-                        phẳng, bếp đầy đủ tiện nghi với lò vi sóng cùng tủ lạnh
-                        cũng như phòng tắm riêng đi kèm vòi xịt/chậu rửa vệ sinh
-                        và dép đi trong phòng. Các căn còn được trang bị lò
-                        nướng, bếp nấu ăn và ấm đun nước. Các điểm tham quan nổi
-                        tiếng gần Căn hộ Melody Vũng Tàu gồm có Bãi Dứa, Bãi
-                        Trước và Tượng Chúa Kitô Vua. Sân bay gần nhất là sân
-                        bay quốc tế Tân Sơn Nhất, cách đó 108 km, và chỗ nghỉ
-                        cung cấp dịch vụ đưa đón sân bay với một khoản phụ phí.
-                    </p>
+                    <h3>Thông tin chi tiết:</h3>
+                    <DesriptionMenu>
+                        <DesriptionItem>Bắt đầu: {from}</DesriptionItem>
+                        <DesriptionItem>Kết thúc: {to}</DesriptionItem>
+                        <DesriptionItem>Giá: {price} VNĐ</DesriptionItem>
+                        <DesriptionItem>Chỗ còn trống: {slot}</DesriptionItem>
+                    </DesriptionMenu>
                 </Desription>
             </ContentContainer>
             <Services />
-            <Checkout />
+            <Checkout amount  = {price}/>
         </Section>
     );
 };

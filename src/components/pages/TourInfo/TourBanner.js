@@ -9,6 +9,13 @@ const Container = styled.div`
     color: ${(props) => props.theme.text};
     position: relative;
     padding: 2rem 5rem;
+
+    @media (max-width: 64em) {
+        padding: 2rem 2rem;
+    }
+    @media (max-width: 64em) {
+        padding: 0.5rem 1rem;
+    }
 `;
 
 const TourName = styled.h3`
@@ -25,11 +32,25 @@ const ImageContainer = styled.div`
     justify-content: center;
     padding-top: 1rem;
     position: relative;
+    width: 100%;
     cursor: pointer;
     img {
         border-radius: 10px;
-        width: 80vw;
+        width: 100%;
         height: 25em;
+    }
+
+    @media (max-width: 64em) {
+        img {
+            width: calc(100vw - 20em);
+            left: 0;
+        }
+    }
+    @media (max-width: 48em) {
+        img {
+            width: 100%;
+            left: 0;
+        }
     }
 `;
 
@@ -54,11 +75,11 @@ const DarkOverlay = styled.div`
         opacity: 0;
     }
 `;
-const TourBanner = ({ name, loc, imgSrc }) => {
+const TourBanner = ({ name, des, imgSrc }) => {
     return (
         <Container>
             <TourName>{name}</TourName>
-            <TourLoc>{loc}</TourLoc>
+            <TourLoc>{des}</TourLoc>
             <ImageContainer>
                 <DarkOverlay />
                 <img src={imgSrc} alt='banner img' />

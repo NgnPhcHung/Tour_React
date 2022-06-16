@@ -28,6 +28,7 @@ const Item = styled.div`
         padding-bottom: 20em;
     }
 `;
+
 const CardSlider = () => {
     return (
         <Section id='showcase'>

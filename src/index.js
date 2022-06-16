@@ -12,6 +12,8 @@ import Footer from './components/sections/Footer/Footer';
 import Profile from './components/pages/User/Profile';
 import Find from './components/pages/Find/Find';
 import TourInfo from './components/pages/TourInfo/TourInfo';
+import PaymentSuccess from './components/pages/TourInfo/PaymentSuccess';
+import Home from './Admin/Home';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -23,7 +25,12 @@ ReactDOM.render(
                     <Route path='/' element={<App />} />
                     <Route path='profileUser' element={<Profile />} />
                     <Route path='findResult' element={<Find />} />
-                    <Route path='tour/tourInfo' element={<TourInfo />} />
+                    <Route
+                        path='tour/tourInfo/:tourID'
+                        element={<TourInfo />}
+                    />
+                    <Route path='paysuccess' element={<PaymentSuccess />} />
+                    {/* <Route path='users/admin/home' element={<Home />} /> */}
                 </Routes>
                 <Footer />
             </BrowserRouter>
