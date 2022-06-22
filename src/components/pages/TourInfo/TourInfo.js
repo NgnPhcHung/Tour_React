@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Checkout from './Checkout';
-import Services from './Services/Services';
 import TourBanner from './TourBanner';
 import axios from 'axios';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import moment from 'moment';
+import ServiceCard from './Services/ServiceCard';
 
 const Section = styled.div`
     display: flex;
@@ -62,6 +60,14 @@ const DesriptionMenu = styled.ul`
 const DesriptionItem = styled.li`
     width: fit-content;
 `;
+
+const ServicesContent = styled.form`
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; ;
+`;
+
 const TourInfo = () => {
     const { tourID } = useParams();
 
@@ -72,7 +78,10 @@ const TourInfo = () => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [slot, setSlot] = useState('');
+    const [datas, setDatas] = useState([]);
 
+    const [service, setService] = useState([]);
+    const [servicePrice, setServicePrive] = useState();
     const getTourDetail = async () => {
         const response = await axios.get(
             `http://localhost:3100/tour/details/${tourID}`
@@ -89,12 +98,59 @@ const TourInfo = () => {
         setSlot(res.Slot - res.OrderedSlot);
     };
 
+    const getServicesData = async () => {
+        try {
+            const response = await axios.get(
+                'http://localhost:3100/service/list'
+            );
+            console.log(response?.data);
+            setDatas(response?.data.results);
+        } catch (err) {
+            if (err.response?.status == 400) {
+                console.log('tour are not correct');
+            }
+        }
+    };
+
+    const handleChange = (e) => {
+        let checkedValue = e.target.value;
+
+        let isCheck = e.target.checked;
+        if (isCheck) {
+            service.push(checkedValue);
+            setService(eliminateDuplicates(service));
+        } else {
+            removeElement(service, e.target.value);
+        }
+        // console.log(service);
+    };
+    function eliminateDuplicates(arr) {
+        var i,
+            len = arr.length,
+            out = [],
+            obj = {};
+
+        for (i = 0; i < len; i++) {
+            obj[arr[i]] = 0;
+        }
+        for (i in obj) {
+            out.push(i);
+        }
+        return out;
+    }
+    function removeElement(array, elem) {
+        var index = array.indexOf(elem);
+        if (index > -1) {
+            array.splice(index, 1);
+        }
+    }
     useEffect(() => {
         getTourDetail();
+        getServicesData();
     }, []);
 
     return (
-        <Section>
+        <Section id='tourInfor'>
             <ContentContainer>
                 <TourBanner name={tourName} des={tourDes} imgSrc={image} />
                 <Desription>
@@ -107,8 +163,22 @@ const TourInfo = () => {
                     </DesriptionMenu>
                 </Desription>
             </ContentContainer>
-            <Services />
-            <Checkout amount  = {price}/>
+            <ServicesContent>
+                {datas.map((item, index) => {
+                    return (
+                        <ServiceCard
+                            key={item.SID}
+                            data={item}
+                            // id={item.SID}
+                            // name={item.ServiceName}
+                            // price={item.Price}
+                            // slot={item.Slot - item.OrderedSlot}
+                            change={handleChange}
+                        />
+                    );
+                })}
+            </ServicesContent>
+            <Checkout amount={price} service={service} />
         </Section>
     );
 };

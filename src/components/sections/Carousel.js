@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation, Autoplay, Mousewheel } from 'swiper';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { HashLoader } from 'react-spinners';
 
 const Container = styled.div`
     width: 50em;
@@ -75,6 +76,7 @@ const ImageContainer = styled.div`
     position: relative;
     img {
         width: 40em;
+        height: 20em;
         transition: all 0.3s ease;
     }
 
@@ -154,12 +156,14 @@ const CarouselComponent = ({ img, name = ' ', vote = ' ', id = '' }) => {
 
 const Carousel = () => {
     const [datas, setDatas] = useState([]);
-
+    const [loading, setLoading] = useState(false);
     const getTourData = async () => {
         try {
-            const response = await axios.get('http://localhost:3100/tour/list');
+            const response = await axios.get(
+                'http://localhost:3100/tour/list/6'
+            );
+            setLoading(true);
             setDatas(response?.data.results);
-            console.log(response?.data.results);
         } catch (err) {
             if (err.response?.status == 400) {
                 console.log('list not exist');
@@ -170,6 +174,7 @@ const Carousel = () => {
     useEffect(() => {
         getTourData();
     }, []);
+
     return (
         <Container>
             <Swiper
@@ -188,18 +193,24 @@ const Carousel = () => {
                 modules={[Mousewheel, Pagination, Autoplay, Navigation]}
                 className='mySwiper'
             >
-                {datas.map((item, index) => {
-                    return (
-                        <SwiperSlide>
-                            <CarouselComponent
-                                img={item.Image}
-                                name={item.TourName}
-                                vote={item.Price}
-                                id={item.TourID}
-                            />
-                        </SwiperSlide>
-                    );
-                })}
+                {loading ? (
+                    datas.map((item, index) => {
+                        if (item.Status == 1) {
+                            return (
+                                <SwiperSlide key={index}>
+                                    <CarouselComponent
+                                        img={item.Image}
+                                        name={item.TourName}
+                                        vote={item.Price}
+                                        id={item.TourID}
+                                    />
+                                </SwiperSlide>
+                            );
+                        }
+                    })
+                ) : (
+                    <HashLoader />
+                )}
             </Swiper>
         </Container>
     );

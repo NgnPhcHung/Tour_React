@@ -88,29 +88,32 @@ const Card = styled.div`
     }
 `;
 
-const ServiceCard = ({ id, name, price, slot }) => {
-    price = parseInt(price);
+const ServiceCard = ({ data, change }) => {
     return (
         <Card>
-            {price > 0 ? (
+            {data.Slot - data.OrderedSlot > 0 ? (
                 <ContentBox>
                     <ServiceName>
                         <h3>
                             <Checkbox
-                                defaultChecked
+                                // defaultChecked
                                 sx={{
                                     '& .MuiSvgIcon-root': {
                                         fontSize: '1.7em',
                                         color: '#fff',
                                     },
                                 }}
+                                value={data.SID + '!!' + data.Price}
+                                onChange={change}
                             />
-                            <label for={id}>{name}</label>
+                            <label htmlFor={data.SID}>{data.ServiceName}</label>
                         </h3>
                     </ServiceName>
                     <Item>
-                        <h4>giá:&nbsp; {price} vnđ</h4>
-                        <h4>khả dụng:&nbsp; {slot} chỗ </h4>
+                        <h4>giá:&nbsp; {data.Price} vnđ</h4>
+                        <h4>
+                            khả dụng:&nbsp; {data.Slot - data.OrderedSlot} chỗ{' '}
+                        </h4>
                     </Item>
                 </ContentBox>
             ) : (

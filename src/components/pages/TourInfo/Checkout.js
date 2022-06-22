@@ -5,7 +5,7 @@ import { SubmitButton } from '../../../Common/Common';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Pay = styled.a`
+const Pay = styled.div`
     display: flex;
     text-decoration: none;
     align-self: flex-end;
@@ -35,43 +35,48 @@ const Title = styled.h4`
     cursor: pointer;
     z-index: 4;
 `;
-const Checkout = ({ amount }) => {
+const Checkout = ({ amount, service }) => {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
+    if (service) {
+        for (let i = 0; i < service.length; i++) {
+            console.log(service[i].split('!!'));
+        }
+    }
+
     today = yyyy + '-' + mm + '-' + dd;
     const paySubmit = async () => {
+        const userID = localStorage.getItem('token').replace(/['"]+/g, '');
+
         const json = JSON.stringify({
-            UserID: localStorage.getItem('token'),
+            UserID: userID,
             OrderTime: today,
             TotalAmount: amount,
-            Status: '1',
         });
         const response = await axios.post(
             'http://localhost:3100/order/add',
             json,
             {
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': 'true',
+                    // 'Access-Control-Allow-Origin': '*',
+                    // 'Access-Control-Allow-Credentials': 'true',
                     'Content-Type': 'application/json',
                 },
                 withCredentials: false,
             }
         );
-        console.log(response?.data.result);
     };
 
     return (
         <Pay id='checkout'>
             <Title>Checkout</Title>
-            {/* <form>
+            <form>
                 <h4>Total Values: {amount} VND</h4>
-                {/* <Link to={{ pathname: '/paysuccess' }}> */}
-            {/* </Link> */}
-            {/* </form> */}
+                <Link to={{ pathname: '/paysuccess' }}></Link>
+            </form>
             <SubmitButton onClick={paySubmit}> Checkout </SubmitButton>
         </Pay>
     );

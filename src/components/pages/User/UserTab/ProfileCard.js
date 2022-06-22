@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../../../../Common/Button';
 import {
@@ -10,6 +10,9 @@ import {
 import { Marginer } from '../../../../Common/Marginer';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import axios from 'axios';
+import moment from 'moment';
+import EditForm from './EditForm';
 
 const Container = styled.div`
     width: 50vw;
@@ -69,21 +72,42 @@ const LabelContainer = styled.div`
     margin-bottom: 1rem;
 `;
 
-const RadioContainer = styled.div`
-    margin: 0.5em 0;
-    display: inline-flex;
-    justify-content: flex-start;
-    align-items: center;
-
-    p {
-        font-size: ${(props) => props.theme.fontsm};
-        padding-right: 2rem;
-        padding-left: 0.2rem;
-    }
-`;
-const ProfileCard = ({ level }) => {
+const ProfileCard = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
+    const [name, setName] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [gender, setGender] = useState('');
     const [edit, setEdit] = useState(false);
+    const [level, setLevel] = useState('');
+    const [address, setAddress] = useState('');
+    const [res, setRes] = useState();
 
+    var userID = localStorage.getItem('token').trim();
+    userID = userID.replace(/['"]+/g, '');
+
+    const getsUserInfor = async () => {
+        const response = axios.get(
+            `http://localhost:3100/acc/details/${userID}`
+        );
+        response.then((value) => {
+            const datas = value.data.results[0];
+            setRes(datas);
+            console.log(datas);
+            var dob = moment(datas.DateOfBirth).utc().format('DD-MM-YYYY');
+            setEmail(datas.Email);
+            setName(datas.UserName);
+            setDateOfBirth(dob);
+            setPhone(datas.Phone);
+            setGender(datas.Gender);
+            setLevel(datas.Level);
+            setAddress(datas.Address);
+        });
+    };
+    useEffect(() => {
+        getsUserInfor();
+    }, []);
     return (
         <Container>
             <Top level={level}>
@@ -104,115 +128,33 @@ const ProfileCard = ({ level }) => {
                 </Edit>
                 <BoxContainer>
                     {edit ? (
-                        <FormContainer>
-                            <CustomizedTextField
-                                label='Họ và tên'
-                                type='text'
-                                required
-                                fullWidth
-                                variant='outlined'
-                                id='custom-css-outlined-input'
-                                name='name'
-                            />
-                            <Marginer direction='vertical' margin='0.2rem' />
-                            <CustomizedTextField
-                                label='Ngày đẻ'
-                                type='date'
-                                required
-                                fullWidth
-                                variant='outlined'
-                                id='custom-css-outlined-input'
-                                name='dateOfBirth'
-                            />
-                            <Marginer direction='vertical' margin='0.2rem' />
-                            <CustomizedTextField
-                                label='Email'
-                                type='Email'
-                                required
-                                fullWidth
-                                variant='outlined'
-                                id='custom-css-outlined-input'
-                                name='email'
-                            />
-                            <Marginer direction='vertical' margin='0.2rem' />
-                            <CustomizedTextField
-                                label='Phone'
-                                type='number'
-                                required
-                                fullWidth
-                                variant='outlined'
-                                id='custom-css-outlined-input'
-                                name='phone'
-                            />
-                            <div>
-                                <RadioContainer>
-                                    <input
-                                        type='radio'
-                                        id='genderChoice1'
-                                        name='gender'
-                                        value='male'
-                                    />
-                                    <p for='genderChoice1'>Nam</p>
-                                </RadioContainer>
-
-                                <RadioContainer>
-                                    <input
-                                        type='radio'
-                                        id='genderChoice2'
-                                        name='gender'
-                                        value='female'
-                                    />
-                                    <p for='genderChoice2'>Nữ</p>
-                                </RadioContainer>
-
-                                <RadioContainer>
-                                    <input
-                                        type='radio'
-                                        id='genderChoice3'
-                                        name='gender'
-                                        value='other'
-                                    />
-                                    <p for='genderChoice2'>Khác</p>
-                                </RadioContainer>
-                            </div>
-                            <Marginer direction='vertical' margin='0.2rem' />
-                            <CustomizedTextField
-                                label='Password'
-                                type='password'
-                                required
-                                fullWidth
-                                variant='outlined'
-                                id='custom-css-outlined-input'
-                                name='password'
-                            />
-                            <Marginer direction='vertical' margin='1rem' />
-                            <Button text='Chỉnh sửa' />
-                        </FormContainer>
+                        <EditForm data={res} />
                     ) : (
                         <FormContainer>
+                            <Marginer direction='vertical' margin='3rem' />
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Hưng đẹp zai</label>
+                                <label>Họ và tên:</label>
+                                <label>{name}</label>
                             </LabelContainer>
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Đó là sự thật</label>
+                                <label>Ngày sinh:</label>
+                                <label>{dateOfBirth}</label>
                             </LabelContainer>
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Sự thật là Hưng đz pro vjp</label>
+                                <label>Email:</label>
+                                <label>{email}</label>
                             </LabelContainer>
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Hưng dô địch</label>
+                                <label>Số điện thoại:</label>
+                                <label>{phone}</label>
                             </LabelContainer>
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Hưng đẹp zai</label>
+                                <label>Địa chỉ:</label>
+                                <label>{address}</label>
                             </LabelContainer>
                             <LabelContainer>
-                                <label>Name:</label>
-                                <label>Hưng đẹp zai</label>
+                                <label>Giới tính:</label>
+                                <label>{gender}</label>
                             </LabelContainer>
                         </FormContainer>
                     )}

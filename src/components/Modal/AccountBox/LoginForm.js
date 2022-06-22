@@ -24,10 +24,19 @@ const LoginForm = () => {
             });
             const response = await axios.post(
                 'http://localhost:3100/user/login',
-                json
+                json,
+                {
+                    headers: {
+                        // Overwrite Axios's automatically set Content-Type
+                        'Content-Type': 'application/json',
+                    },
+                }
             );
-            localStorage.setItem('token', JSON.stringify(username));
-            if (response?.data.results) {
+
+            if (response?.data.code == 404)
+                alert('Tên đăng nhập hoặc tài khoản không đúng');
+            else if (response?.data.code == 200) {
+                localStorage.setItem('token', JSON.stringify(username));
                 window.location.reload();
             }
         } catch (err) {

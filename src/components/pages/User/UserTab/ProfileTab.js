@@ -11,6 +11,7 @@ const ListGroup = styled.ul`
     li {
         margin: 0 1rem;
         padding: 0.5rem 1rem 0.5rem 1rem;
+        cursor: pointer;
     }
 
     .list-item {

@@ -34,7 +34,7 @@ const Services = () => {
     const getServicesData = async () => {
         try {
             const response = await axios.get(
-                'http://localhost:3100/order/list'
+                'http://localhost:3100/service/list'
             );
             console.log(response?.data);
             setDatas(response?.data.results);
@@ -55,6 +55,7 @@ const Services = () => {
                 {datas.map((item, index) => {
                     return (
                         <ServiceCard
+                            key={item.SID}
                             id={item.SID}
                             name={item.ServiceName}
                             price={item.Price}

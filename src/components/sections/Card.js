@@ -1,5 +1,7 @@
+import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Section = styled.div`
     * {
@@ -104,44 +106,53 @@ const InforSection = styled.div`
         font-size: ${(props) => props.theme.fontsm};
     }
 `;
-const Card = () => {
+const Card = ({ data }) => {
     return (
         <Section>
-            <CardContainer href='/tour/tourInfo'>
-                <Header>
-                    <img
-                        alt='cover'
-                        src='https://picsum.photos/500/400?random=1'
-                    />
-                </Header>
-                <Content>
-                    <div className='header'>
-                        <a>
-                            <h3 className='title'>Du lịch tắm biển mùa đông</h3>
-                        </a>
-                    </div>
-                    <div className='info'>
-                        <InforSection>
-                            <label>From &amp; To</label>
-                            <span>
-                                Sun 8 Sept - <br /> Tues 10 Sept
-                            </span>
-                        </InforSection>
-                        <InforSection>
-                            <label>Slot</label>
-                            <span>35</span>
-                        </InforSection>
-                        <InforSection>
-                            <label>Valid</label>
-                            <span>18</span>
-                        </InforSection>
-                        <InforSection>
-                            <label>Amount</label>
-                            <span>300.000</span>
-                        </InforSection>
-                    </div>
-                </Content>
-            </CardContainer>
+            <Link
+                to={{
+                    pathname: `/tour/tourInfo/${data.TourID}`,
+                }}
+            >
+                <CardContainer href=''>
+                    <Header>
+                        <img alt='cover' src={data.Image} />
+                    </Header>
+                    <Content>
+                        <div className='header'>
+                            <a>
+                                <h3 className='title'>{data.TourName}</h3>
+                            </a>
+                        </div>
+                        <div className='info'>
+                            <InforSection>
+                                <label>From &amp; To</label>
+                                <span>
+                                    {moment(data.BeginDate)
+                                        .utc()
+                                        .format('DD-MM-YYYY')}{' '}
+                                    - <br />{' '}
+                                    {moment(data.EndDate)
+                                        .utc()
+                                        .format('DD-MM-YYYY')}
+                                </span>
+                            </InforSection>
+                            <InforSection>
+                                <label>Slot</label>
+                                <span>{data.Slot}</span>
+                            </InforSection>
+                            <InforSection>
+                                <label>Valid</label>
+                                <span>{data.Slot - data.OrderedSlot}</span>
+                            </InforSection>
+                            <InforSection>
+                                <label>Amount</label>
+                                <span>{data.Price}</span>
+                            </InforSection>
+                        </div>
+                    </Content>
+                </CardContainer>
+            </Link>
         </Section>
     );
 };

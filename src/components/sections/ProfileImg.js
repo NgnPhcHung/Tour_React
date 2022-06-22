@@ -20,7 +20,6 @@ const ProfileImg = () => {
                     src='https://picsum.photos/500/400?random=2'
                     alt='profile'
                 />
-                <Link to='/profileUser' />
             </a>
         </ImageContainer>
         // <TestFetch />

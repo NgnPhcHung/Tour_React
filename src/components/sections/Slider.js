@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 import 'swiper/css';
@@ -6,6 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import styled from 'styled-components';
 import Card from './Card';
+import { setDate } from 'date-fns';
 
 const Section = styled.div`
     color: ${(props) => props.theme.text};
@@ -86,7 +87,8 @@ const Title = styled.h2`
     }
 `;
 
-const ContentSlide = ({ title }) => {
+const ContentSlide = ({ title, data }) => {
+    console.log(data);
     return (
         <Section>
             <Title>{title}</Title>
@@ -100,47 +102,27 @@ const ContentSlide = ({ title }) => {
                     }}
                     navigation={true}
                     modules={[Pagination, Navigation]}
-                    breakpoints={{
-                        1280: {
-                            slidesPerView: 4,
-                        },
-                        1080: {
-                            slidesPerView: 3,
-                        },
-                        720: {
-                            slidesPerView: 2,
-                        },
-                        480: {
-                            slidesPerView: 1,
-                        },
-                    }}
+                    // breakpoints={{
+                    //     // 1280: {
+                    //     //     slidesPerView: 4,
+                    //     // },
+                    //     1080: {
+                    //         slidesPerView: 3,
+                    //     },
+                    //     720: {
+                    //         slidesPerView: 2,
+                    //     },
+                    //     480: {
+                    //         slidesPerView: 1,
+                    //     },
+                    // }}
                     className='mySwiper'
                 >
                     <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <Card />
+                        <Card data={data} />
                     </SwiperSlide>
                 </Swiper>
+                ;
             </div>
         </Section>
     );
