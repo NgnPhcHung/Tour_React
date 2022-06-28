@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import ServiceCard from './Services/ServiceCard';
+import { currencyFormat } from '../../../Handler/currency';
 
 const Section = styled.div`
     display: flex;
@@ -81,12 +82,12 @@ const TourInfo = () => {
     const [datas, setDatas] = useState([]);
 
     const [service, setService] = useState([]);
-    const [servicePrice, setServicePrive] = useState();
     const getTourDetail = async () => {
         const response = await axios.get(
             `http://localhost:3100/tour/details/${tourID}`
         );
         const res = response?.data.results[0];
+        console.log(res);
         setTourName(res.TourName);
         setTourDes(res.Descriptions);
         setPrice(res.Price);
@@ -103,7 +104,6 @@ const TourInfo = () => {
             const response = await axios.get(
                 'http://localhost:3100/service/list'
             );
-            console.log(response?.data);
             setDatas(response?.data.results);
         } catch (err) {
             if (err.response?.status == 400) {
@@ -119,10 +119,11 @@ const TourInfo = () => {
         if (isCheck) {
             service.push(checkedValue);
             setService(eliminateDuplicates(service));
+            // console.log(service);
         } else {
             removeElement(service, e.target.value);
+            // console.log(service);
         }
-        // console.log(service);
     };
     function eliminateDuplicates(arr) {
         var i,
@@ -158,7 +159,9 @@ const TourInfo = () => {
                     <DesriptionMenu>
                         <DesriptionItem>Bắt đầu: {from}</DesriptionItem>
                         <DesriptionItem>Kết thúc: {to}</DesriptionItem>
-                        <DesriptionItem>Giá: {price} VNĐ</DesriptionItem>
+                        <DesriptionItem>
+                            Giá: {currencyFormat(price)} VNĐ
+                        </DesriptionItem>
                         <DesriptionItem>Chỗ còn trống: {slot}</DesriptionItem>
                     </DesriptionMenu>
                 </Desription>
@@ -169,16 +172,12 @@ const TourInfo = () => {
                         <ServiceCard
                             key={item.SID}
                             data={item}
-                            // id={item.SID}
-                            // name={item.ServiceName}
-                            // price={item.Price}
-                            // slot={item.Slot - item.OrderedSlot}
                             change={handleChange}
                         />
                     );
                 })}
             </ServicesContent>
-            <Checkout amount={price} service={service} />
+            <Checkout tour={tourID} amount={price} service={service} />
         </Section>
     );
 };

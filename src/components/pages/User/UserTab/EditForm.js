@@ -21,11 +21,13 @@ const EditForm = ({ data }) => {
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [gender, setGender] = useState('');
     const [address, setAddress] = useState('');
-
+    console.log(data);
     const edit = async () => {
+        const userID = localStorage.getItem('token').replace(/['"]+/g, '');
+
         if (name && email && phone && password && gender && address) {
             const json = JSON.stringify({
-                UserID: localStorage.getItem('token').replace(/['"]+/g, ''),
+                UserID: userID,
                 UserName: name,
                 Email: email,
                 Phone: phone,
@@ -34,6 +36,8 @@ const EditForm = ({ data }) => {
                 Gender: gender,
                 Address: address,
                 TypeID: 'T2',
+                Status: data.Status,
+                Level: data.Level,
             });
             const response = await axios.put(
                 'http://localhost:3100/acc/update',

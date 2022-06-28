@@ -88,7 +88,7 @@ const Title = styled.h2`
 `;
 
 const ContentSlide = ({ title, data }) => {
-    console.log(data);
+    // console.log(data);
     return (
         <Section>
             <Title>{title}</Title>
@@ -102,27 +102,27 @@ const ContentSlide = ({ title, data }) => {
                     }}
                     navigation={true}
                     modules={[Pagination, Navigation]}
-                    // breakpoints={{
-                    //     // 1280: {
-                    //     //     slidesPerView: 4,
-                    //     // },
-                    //     1080: {
-                    //         slidesPerView: 3,
-                    //     },
-                    //     720: {
-                    //         slidesPerView: 2,
-                    //     },
-                    //     480: {
-                    //         slidesPerView: 1,
-                    //     },
-                    // }}
+                    breakpoints={{
+                        1280: {
+                            slidesPerView: 3,
+                        },
+                        720: {
+                            slidesPerView: 2,
+                        },
+                        480: {
+                            slidesPerView: 1,
+                        },
+                    }}
                     className='mySwiper'
                 >
-                    <SwiperSlide>
-                        <Card data={data} />
-                    </SwiperSlide>
+                    {data.map((item, index) => {
+                        return (
+                            <SwiperSlide key={index}>
+                                <Card data={item} />
+                            </SwiperSlide>
+                        );
+                    })}
                 </Swiper>
-                ;
             </div>
         </Section>
     );

@@ -66,7 +66,7 @@ const SignupForm = (props) => {
         <BoxContainer>
             <FormContainer>
                 <CustomizedTextField
-                    label='Full Name'
+                    label='Tên đầy đủ'
                     type='text'
                     required
                     fullWidth
@@ -88,7 +88,7 @@ const SignupForm = (props) => {
                 />
                 <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
-                    label='Phone'
+                    label='Số điện thoại'
                     type='number'
                     required
                     fullWidth
@@ -99,7 +99,7 @@ const SignupForm = (props) => {
                 />
                 <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
-                    label='Password'
+                    label='Mật khẩu'
                     type='password'
                     required
                     fullWidth
@@ -110,7 +110,7 @@ const SignupForm = (props) => {
                 />
                 <Marginer direction='vertical' margin={5} />
                 <CustomizedTextField
-                    label='Re-Password'
+                    label='Nhập lại mật khẩu'
                     type='password'
                     required
                     fullWidth

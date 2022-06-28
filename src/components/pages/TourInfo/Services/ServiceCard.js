@@ -1,6 +1,7 @@
 import { Checkbox } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
+import { currencyFormat } from '../../../../Handler/currency';
 
 const ServiceName = styled.div`
     display: flex;
@@ -110,7 +111,7 @@ const ServiceCard = ({ data, change }) => {
                         </h3>
                     </ServiceName>
                     <Item>
-                        <h4>giá:&nbsp; {data.Price} vnđ</h4>
+                        <h4>giá:&nbsp; {currencyFormat(data.Price)}</h4>
                         <h4>
                             khả dụng:&nbsp; {data.Slot - data.OrderedSlot} chỗ{' '}
                         </h4>

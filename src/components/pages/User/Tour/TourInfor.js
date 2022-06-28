@@ -2,8 +2,14 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { css } from '@emotion/react';
-import { ClimbingBoxLoader, HashLoader, ScaleLoader } from 'react-spinners';
+import { HashLoader } from 'react-spinners';
+import {
+    SwipeableList,
+    SwipeableListItem,
+} from '@sandstreamdev/react-swipeable-list';
+import { confirm } from 'react-confirm-box';
+
+import { ToastContainer, toast } from 'react-toastify';
 
 const Title = styled.h3`
     font-size: ${(props) => props.theme.fontmd};
@@ -41,7 +47,7 @@ const Container = styled.div`
     font-size: ${(props) => props.theme.fontmd};
 `;
 
-const CardContainer = styled.div`
+const CardContainer = styled.ul`
     width: 95%;
     display: flex;
     flex-direction: row;
@@ -53,118 +59,235 @@ const CardContainer = styled.div`
     &:hover {
         box-shadow: 0px 25px 15px -3px rgba(0, 0, 0, 0.1);
     }
+    li {
+        list-style-type: none;
+    }
+`;
+const Status = styled.h4`
+    color: ${(props) =>
+        props.what == 0
+            ? `var(--yellow)`
+            : props.what == 1
+            ? `var(--green)`
+            : props.what == 2
+            ? `var(--orange)`
+            : ''};
+    padding-right: 2rem;
+    width: 15rem;
 `;
 
-const Order = (ordID) => {
-    const override = css`
-        display: block;
-        margin: 0 auto;
-        border-color: red;
-    `;
+const ScrollList = styled.div`
+    overflow-y: scroll;
+    height: 20rem;
+    &::-webkit-scrollbar {
+        width: 10px;
+        background-color: ${(props) => props.theme.body};
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: ${(props) => props.theme.text};
+        background-image: -webkit-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
+            transparent 75%,
+            transparent
+        );
+        border-radius: 10px;
+    }
+`;
 
-    const [ord, setOrder] = useState({});
-    const [ordDetail, setOrdDetail] = useState({});
-    const [ordDate, setOrdDate] = useState('');
-    const [tour, setTour] = useState();
-    const [tourName, setTourName] = useState('');
-    const [tourPrice, setTourPrice] = useState();
-    const [ordSlot, setOrdSLot] = useState();
-    const id = ordID.ordID;
-
-    const [loading, setLoading] = useState(false);
-
-    const getOrder = async () => {
+const Order = ({ data }) => {
+    const [tourData, setTour] = useState([]);
+    const [tourValue, setTourValue] = useState(0);
+    const getTour = async () => {
+        //calculate money
         const response = await axios.get(
-            `http://localhost:3100/order/byid/${id}`
-        );
-        setLoading(true);
-        setOrder(response?.data.results[0]);
-        setTourName(tour.tourName);
-    };
-
-    const OrderDetail = async () => {
-        const response = await axios.get(
-            `http://localhost:3100/order/ordDetail/${id}`
+            `http://localhost:3100/order/details/${data.OID}`
         );
 
-        const tour = await axios.get(
-            `http://localhost:3100/tour/details/${response?.data.results[0].TourID}`
-        );
+        setTourValue(parseInt(response?.data.results[0].Amount));
 
-        if (response?.status == 200) {
-            setTour(tour?.data.results[0]);
-            getOrder();
-        }
+        const res = await axios.get(
+            `http://localhost:3100/tour/details/${data.TourID}`
+        );
+        // tourData.push(res?.data.results[0]);
+        setTour(res?.data.results[0]);
     };
 
     useEffect(() => {
-        OrderDetail();
-        setOrdDate(moment(ord.OrderTime).utc().format('DD-MM-YYYY'));
+        getTour();
     }, []);
 
+    function currencyFormat(x) {
+        x = x.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+        return x;
+    }
+    // console.log(tourData);
+    const price = tourData.Price;
+
+    if (typeof price === 'number') {
+        currencyFormat(price);
+    }
     return (
         <div>
-            {loading ? (
-                <CardContainer>
-                    <Title>
-                        {tour.TourName}
-                        <p>{ord.Address}</p>
-                    </Title>
-                    <Name>{ord.Level}</Name>
-                    <Name>{ord.Gender}</Name>
-                    <Name>{ord.Email}</Name>
-                    <Name>{ord.Phone}</Name>
-                    <Name>
-                        {moment(ord.OrderTime).utc().format('DD-MM-YYYY')}
-                    </Name>
-                </CardContainer>
-            ) : (
-                <Load>
-                    <HashLoader />
-                </Load>
-            )}
+            <CardContainer>
+                <Title>
+                    {tourData.TourName}
+                    <p>{tourData.Address}</p>
+                </Title>
+                <Name>
+                    {typeof price === 'number' ? currencyFormat(price) : ''}
+                </Name>
+                <Status>{data.OrderedSlot}</Status>
+                <Name>{currencyFormat(tourValue)}</Name>
+                <Status what={data.Status}>
+                    {data.Status == 0
+                        ? 'Pending'
+                        : data.Status == 1
+                        ? 'Approve'
+                        : data.Status == 3
+                        ? 'Waiting'
+                        : 'Cancel'}
+                </Status>
+                <Name>{moment(data.OrderTime).utc().format('DD-MM-YYYY')}</Name>
+            </CardContainer>
         </div>
     );
 };
 
 const TourInfor = () => {
     const [datas, setDatas] = useState([]);
+    const [loading, setLoad] = useState(false);
+
     var userID = localStorage.getItem('token').trim();
     userID = userID.replace(/['"]+/g, '');
     const getOrder = async () => {
         const response = await axios.get(
-            `http://localhost:3100/order/byCus/${userID}`
+            `http://localhost:3100/order/byuserid/${userID}`
         );
-        // console.log(response?.data.results);
-        setDatas(response?.data.results);
+
+        for (let i = 0; i < response?.data.results.length; i++) {
+            let oid = response.data.results[i].OID;
+            const res = await axios.get(
+                `http://localhost:3100/order/details/${oid}`
+            );
+            // console.log(res?.data.results[0]);
+            datas.push(res?.data.results[0]);
+        }
+
+        setLoad(true);
+    };
+
+    const deleteOrder = async (index) => {
+        const result = await confirm('Are you sure?');
+        if (result) {
+            // console.log(datas.filter((_, i) => i === index)[0]);
+            const delOrd = await axios.delete(
+                `http://localhost:3100/order/delete/${
+                    datas.filter((_, i) => i === index)[0].OID
+                }`
+            );
+
+            const getTour = await axios.get(
+                `http://localhost:3100/tour/details/${
+                    datas.filter((_, i) => i === index)[0].TourID
+                }`
+            );
+            console.log(datas.filter((_, i) => i === index)[0]);
+            const tourRes = getTour?.data.results[0];
+            const jsonTour = JSON.stringify({
+                TourID: tourRes.TourID,
+                BeginDate: moment(tourRes.BeginDate).utc().format('YYYY-MM-DD'),
+                EndDate: moment(tourRes.EndDate).utc().format('YYYY-MM-DD'),
+                Descriptions: tourRes.Descriptions,
+                Image: tourRes.Image,
+                Location: tourRes.Location,
+                OrderedSlot:
+                    parseInt(tourRes.OrderedSlot) -
+                    parseInt(
+                        datas.filter((_, i) => i === index)[0].OrderedSlot
+                    ),
+                Price: tourRes.Price,
+                Slot: tourRes.Slot,
+                Status: tourRes.Status,
+                TourName: tourRes.TourName,
+            });
+            const updateTour = await axios.put(
+                'http://localhost:3100/tour/update',
+                jsonTour,
+                {
+                    headers: {
+                        // 'Access-Control-Allow-Origin': '*',
+                        // 'Access-Control-Allow-Credentials': 'true',
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: false,
+                }
+            );
+
+            // console.log(delOrd);
+            if (delOrd.data.code == 200 && updateTour.data.code == 200) {
+                setDatas((datas) => datas.filter((_, i) => i !== index));
+                toast.success('🦄 Wow so easy!', {
+                    position: 'bottom-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+            return;
+        }
+        console.log('You click No!');
     };
     useEffect(() => {
         getOrder();
     }, []);
 
-    async function fetch1(id) {
-        const response = await axios.get(
-            `http://localhost:3100/order/ordDetail/${id}`
-        );
-        return response?.data.results != null;
-    }
-
     return (
         <Container>
             <CardContainer>
                 <Title>
-                    Tour Name
+                    Tên Tour
                     <p></p>
                 </Title>
-                <Name>Level</Name>
-                <Name>Gender</Name>
-                <Name>Email</Name>
-                <Name>Phone</Name>
-                <Name>Order Date</Name>
+                <Name>Giá Tour</Name>
+                <Status>Chỗ</Status>
+                <Name>Tổng</Name>
+                <Status>Trạng thái</Status>
+                <Name>Ngày đặt</Name>
             </CardContainer>
-            {datas.map((item, index) => {
-                if (fetch1(item.OID)) return <Order ordID={item.OID} />;
-            })}
+            <ScrollList>
+                {loading ? (
+                    datas.map((item, index) => {
+                        return (
+                            <li key={index} style={{ listStyleType: 'none' }}>
+                                <SwipeableList>
+                                    <SwipeableListItem
+                                        swipeRight={{
+                                            content: <></>,
+                                            action: () => {
+                                                deleteOrder(index);
+                                            },
+                                        }}
+                                    >
+                                        <Order data={item} />
+                                    </SwipeableListItem>
+                                </SwipeableList>
+                            </li>
+                        );
+                    })
+                ) : (
+                    <Load>
+                        <HashLoader />
+                    </Load>
+                )}
+            </ScrollList>
         </Container>
     );
 };

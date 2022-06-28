@@ -51,9 +51,11 @@ const CardSlider = () => {
                 setDatas({ ...response.data.results });
                 for (let i = 0; i < response.data.results.length; i++) {
                     if (response.data.results[i].Status == 2) {
-                        setData1({ data1: data1, ...response.data.results[i] });
+                        // setData1({ data1: data1, ...response.data.results[i] });
+                        data1.push(response.data.results[i]);
                     } else if (response.data.results[i].Status == 3) {
-                        setData2({ data2: data2, ...response.data.results[i] });
+                        data2.push(response.data.results[i]);
+                        // setData2({ data2: data2, ...response.data.results[i] });
                     }
                 }
                 setLoading(true);

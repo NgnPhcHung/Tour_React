@@ -53,6 +53,24 @@ input[type="date"]:focus::before,
 input[type="date"]:valid::before {
   content: "";
 }
+    ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #fff;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #000;
+        background-image: -webkit-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent
+
+        );
+        border-radius: 10px;
+    }
+    :hover::-webkit-scrollbar-thumb {
+        background-color: #474747;
+
+    }
 `;
 
 export default GlobalStyles;

@@ -21,12 +21,13 @@ const Section = styled.div`
         font-weight: 400;
     }
 
-    a {
+    label {
         text-decoration: none;
         color: inherit;
+        cursor: pointer;
     }
 
-    a:hover {
+    label:hover {
         color: #6abcea;
     }
 
@@ -46,7 +47,7 @@ const Header = styled.div`
     border-top-right-radius: 10px;
 `;
 
-const CardContainer = styled.a`
+const CardContainer = styled.div`
     background: ${(props) => props.theme.body};
     width: 100%;
     display: inline-block;
@@ -86,11 +87,15 @@ const InforSection = styled.div`
 
     &:first-of-type {
         text-align: left;
-        padding-right: 2em;
+        padding-right: 3em;
     }
 
     &:last-of-type {
         text-align: right;
+    }
+
+    &:first-child label {
+        padding-left: 0rem;
     }
 
     label {
@@ -99,6 +104,7 @@ const InforSection = styled.div`
         margin-bottom: 0.5em;
         font-size: ${(props) => props.theme.fontxs};
         margin-right: 0.5em;
+        padding-left: 1.5rem;
     }
 
     span {
@@ -114,15 +120,15 @@ const Card = ({ data }) => {
                     pathname: `/tour/tourInfo/${data.TourID}`,
                 }}
             >
-                <CardContainer href=''>
+                <CardContainer>
                     <Header>
                         <img alt='cover' src={data.Image} />
                     </Header>
                     <Content>
                         <div className='header'>
-                            <a>
+                            <label>
                                 <h3 className='title'>{data.TourName}</h3>
-                            </a>
+                            </label>
                         </div>
                         <div className='info'>
                             <InforSection>
@@ -131,7 +137,7 @@ const Card = ({ data }) => {
                                     {moment(data.BeginDate)
                                         .utc()
                                         .format('DD-MM-YYYY')}{' '}
-                                    - <br />{' '}
+                                    ⇁ <br />
                                     {moment(data.EndDate)
                                         .utc()
                                         .format('DD-MM-YYYY')}

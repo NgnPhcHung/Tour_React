@@ -1,15 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '../../../../Common/Button';
-import {
-    BoxContainer,
-    CustomizedTextField,
-    FormContainer,
-    useStyles,
-} from '../../../../Common/Common';
+import { BoxContainer, FormContainer } from '../../../../Common/Common';
 import { Marginer } from '../../../../Common/Marginer';
-import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+
 import axios from 'axios';
 import moment from 'moment';
 import EditForm from './EditForm';
@@ -36,7 +29,9 @@ const Top = styled.div`
             ? `var(--green)`
             : props.level == 2
             ? props.theme.text
-            : `var(--blue)`};
+            : props.level == 3
+            ? `var(--blue)`
+            : `var(--orange)`};
     position: relative;
 
     img {
@@ -81,12 +76,62 @@ const ProfileCard = () => {
     const [gender, setGender] = useState('');
     const [edit, setEdit] = useState(false);
     const [level, setLevel] = useState('');
+    const [status, setStatus] = useState('');
     const [address, setAddress] = useState('');
     const [res, setRes] = useState();
 
     var userID = localStorage.getItem('token').trim();
     userID = userID.replace(/['"]+/g, '');
 
+    const updateLevel = async (datas) => {
+        let re;
+        const upLevel = await axios.get(
+            `http://localhost:3100/order/byuserid/${userID}`
+        );
+        if (
+            upLevel.data.results.length > 3 &&
+            upLevel.data.results.length < 5
+        ) {
+            re = 2;
+        } else if (
+            upLevel.data.results.length >= 5 &&
+            upLevel.data.results.length < 8
+        ) {
+            re = 3;
+        } else if (
+            upLevel.data.results.length >= 8 &&
+            upLevel.data.results.length < 10
+        ) {
+            re = 4;
+        } else if (upLevel.data.results.length >= 10) {
+            re = 5;
+        } else {
+            re = 1;
+        }
+
+        const json = JSON.stringify({
+            UserID: userID,
+            UserName: datas.UserName,
+            Email: datas.Email,
+            Phone: datas.Phone,
+            Password: datas.Phone,
+            DateOfBirth: moment(datas.DateOfBirth).utc().format('YYYY-MM-DD'),
+            Gender: datas.Gender,
+            Address: datas.Address,
+            TypeID: 'T2',
+            Status: datas.Status,
+            Level: re,
+        });
+        await axios.put('http://localhost:3100/acc/update', json, {
+            headers: {
+                // 'Access-Control-Allow-Origin': '*',
+                // 'Access-Control-Allow-Credentials': 'true',
+                'Content-Type': 'application/json',
+            },
+            withCredentials: false,
+        });
+        return re;
+    };
     const getsUserInfor = async () => {
         const response = axios.get(
             `http://localhost:3100/acc/details/${userID}`
@@ -94,15 +139,15 @@ const ProfileCard = () => {
         response.then((value) => {
             const datas = value.data.results[0];
             setRes(datas);
-            console.log(datas);
             var dob = moment(datas.DateOfBirth).utc().format('DD-MM-YYYY');
             setEmail(datas.Email);
             setName(datas.UserName);
             setDateOfBirth(dob);
             setPhone(datas.Phone);
             setGender(datas.Gender);
-            setLevel(datas.Level);
+            setLevel(setStatus(updateLevel(datas)));
             setAddress(datas.Address);
+            setStatus(datas.Status);
         });
     };
     useEffect(() => {

@@ -19,7 +19,7 @@ const LoginForm = () => {
     const login = async () => {
         try {
             const json = JSON.stringify({
-                UserID: username,
+                Email: username,
                 Password: password,
             });
             const response = await axios.post(
@@ -33,10 +33,14 @@ const LoginForm = () => {
                 }
             );
 
+            // console.log(response.data.results[0].UserID);
             if (response?.data.code == 404)
                 alert('Tên đăng nhập hoặc tài khoản không đúng');
             else if (response?.data.code == 200) {
-                localStorage.setItem('token', JSON.stringify(username));
+                localStorage.setItem(
+                    'token',
+                    JSON.stringify(response.data.results[0].UserID)
+                );
                 window.location.reload();
             }
         } catch (err) {
@@ -50,7 +54,7 @@ const LoginForm = () => {
         <BoxContainer>
             <FormContainer>
                 <CustomizedTextField
-                    label='Username'
+                    label='Tên đăng nhập'
                     type='Email'
                     required
                     fullWidth
@@ -61,7 +65,7 @@ const LoginForm = () => {
                 />
                 <Marginer direction='vertical' margin={10} />
                 <CustomizedTextField
-                    label='Password'
+                    label='Mật khẩu'
                     type='password'
                     required
                     fullWidth
