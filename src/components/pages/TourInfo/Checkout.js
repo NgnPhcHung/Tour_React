@@ -85,23 +85,6 @@ const Checkout = ({ tour, amount, service }) => {
     var yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
 
-    // var today = new Date();
-    // var dd = String(today.getDate()).padStart(2, '0');
-    // var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    // var yyyy = today.getFullYear();
-    // today = yyyy + '-' + mm + '-' + dd;
-    // var current = [];
-    // var total = parseInt(amount) * guess;
-    // if (current != service) {
-    //     var temp = total;
-    //     for (let i = 0; i < service.length; i++) {
-    //         temp += parseInt(service[i].split('!!')[1]);
-    //         ser.push(service[i].split('!!')[0]);
-    //         eliminateDuplicates(ser);
-    //     }
-    //     total = temp;
-    // }
-
     const discount = () => {
         switch (level) {
             case '1':

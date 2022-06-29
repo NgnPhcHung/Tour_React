@@ -1,4 +1,3 @@
-import ParticlesBg from 'particles-bg';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ProfileTab from './UserTab/ProfileTab';

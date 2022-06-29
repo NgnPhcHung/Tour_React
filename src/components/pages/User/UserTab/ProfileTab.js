@@ -37,6 +37,9 @@ const Container = styled.div`
         margin: 1rem 1rem;
         padding: 0;
     }
+    @media (max-width: 72em) {
+        width: 95%;
+    }
 `;
 
 const ProfileTab = ({ children }) => {

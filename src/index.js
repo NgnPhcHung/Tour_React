@@ -13,7 +13,6 @@ import Profile from './components/pages/User/Profile';
 import Find from './components/pages/Find/Find';
 import TourInfo from './components/pages/TourInfo/TourInfo';
 import PaymentSuccess from './components/pages/TourInfo/PaymentSuccess';
-import Home from './Admin/Home';
 
 ReactDOM.render(
     <React.StrictMode>
